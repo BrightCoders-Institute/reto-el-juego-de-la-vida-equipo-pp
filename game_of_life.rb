@@ -8,138 +8,112 @@ class GameOfLife
       @board = Array.new(@rows){Array.new(@cols, 0)}
   end
 
-  #def generate_board()
-   #   tablero = Array.new(@rows){Array.new(@cols, 0)}
-  #end
-
   def imprimir_tablero
       @board.each do |rows| 
           puts rows.join(" ")
       end
   end
+end
 
-  
+# Este es el código para ver los vecinos vivosdef explore(grid, r, c, columns, rows)
+def comparison(grid, row, col)
+  if grid[row][col] == 1
+    return 1
+  else
+    return 0
+  end
+end
 
-  #def next_generation()
-   #   new_board = Array.new(@rows){Array.new(@cols, 1)}
+def explore(grid, row, col, columns)
+  alive = 0;
+  # upper row
+  if( row-1 >= 0)
+    alive += comparison(grid, row-1, col)
+    if( col-1 >= 0)
+      alive += comparison(grid, row-1, col-1)
+    end
+    if(col+1 < columns)
+      alive += comparison(grid, row-1, col+1)
+    end
+  end
+  # same row
+  if( col-1 >= 0)
+    alive += comparison(grid, row, col-1)
+  end
+  if(col+1 < columns)
+    alive += comparison(grid, row, col+1)
+  end
+  # lower row
+  if( row+1 < grid.length)
+    alive += comparison(grid, row+1, col)
+    if( col-1 >= 0)
+      alive += comparison(grid, row+1, col-1)
+    end
+    if(col+1 < columns)
+      alive += comparison(grid, row+1, col+1)
+    end
+  end
+  return alive
+end
 
-  #end
-
+def updateGrid (grid, row, col, newBoard, aliveNeighbors)
+  if(grid[row][col] == 0)
+    if aliveNeighbors == 3
+      newBoard[row][col] = 1
+      # "---Esta célula ahora está viva---"
+    end
+  else
+    if aliveNeighbors < 2
+      newBoard[row][col] = 0
+      # "---MUERTE---"
+    elsif aliveNeighbors > 3
+      newBoard[row][col] = 0
+      # "---MUERTE---"
+    elsif aliveNeighbors == 2 or aliveNeighbors == 3
+      newBoard[row][col] = 1
+      # "---SOBREVIVE---"
+    end
+  end
 end
 
 board = GameOfLife.new(3, 5)
 board.board[1][1] = 1
 board.board[0][1] = 1
 board.board[1][4] = 1
-board.board[3][4] = 1
-board.board[3][2] = 1
-board.board[3][3] = 1
-board.board[4][3] = 1
-board.imprimir_tablero
+board.board[2][4] = 1
+board.board[2][2] = 1
+
+
 
 puts "\n"
-board_copia = GameOfLife.new(board.rows, board.cols)
 
-# Este es el código para ver los vecinos vivosdef explore(grid, r, c, columns, rows)
-def comparison(grid, row, col)
-if grid[row][col] == 1
-  return 1
-else
-  return 0
-end
-end
 
-def explore(grid, row, col, columns)
-alive = 0;
-# upper row
-if( row-1 >= 0)
-  alive += comparison(grid, row-1, col)
-  if( col-1 >= 0)
-    alive += comparison(grid, row-1, col-1)
+generacion = 6
+g = 0
+
+puts "Generación #{g}"
+board.imprimir_tablero
+
+while g <= generacion
+  board_copia = GameOfLife.new(board.rows, board.cols)
+  # 0 - 4
+  (0..board.rows-1).each do |r|
+    # 0 - 4
+    (0..board.cols-1).each do |c|
+      # (0,1)
+      vivos = explore(board.board, r, c, board.cols)
+      # puts "#{r},#{c} tiene valor #{board.board[r][c]} tiene #{vivos} vecinos vivos"
+      updateGrid(board.board, r, c, board_copia.board, vivos)
+    end
   end
-  if(col+1 < columns)
-    alive += comparison(grid, row-1, col+1)
-  end
-end
-# same row
-if( col-1 >= 0)
-  alive += comparison(grid, row, col-1)
-end
-if(col+1 < columns)
-  alive += comparison(grid, row, col+1)
-end
-# lower row
-if( row+1 < grid.length)
-  alive += comparison(grid, row+1, col)
-  if( col-1 >= 0)
-    alive += comparison(grid, row+1, col-1)
-  end
-  if(col+1 < columns)
-    alive += comparison(grid, row+1, col+1)
-  end
-end
-return alive
-end
 
-def isZero (grid, row, col)
-if(grid[row][col] == 0)
-  return true
-else
-  return false
-end
-end
+  puts "\n"
+  g += 1
+  puts "Generación #{g}"
+  board_copia.imprimir_tablero
 
-def rulesAliveNeighbors(aliveNeighbors)
-if aliveNeighbors < 2
-  return "---MUERTE---"
-
-elsif aliveNeighbors > 3
-  return "---MUERTE---"
-  
-elsif aliveNeighbors == 2 or aliveNeighbors == 3
-  return "---SOBREVIVE---"
+  board = board_copia
 end
-end
-
-def ruleDeadNeighbors(aliveNeighbors)
-if aliveNeighbors == 3
-  return "---Esta célula ahora está viva---"
-
-end
-end
-
-def updateGrid (grid, row, col, newBoard, aliveNeighbors)
-if(grid[row][col] == 0)
-  if aliveNeighbors == 3
-    newBoard[row][col] = 1
-    return "---Esta célula ahora está viva---"
-  end
-else
-  if aliveNeighbors < 2
-    newBoard[row][col] = 0
-    return "---MUERTE---"
-  elsif aliveNeighbors > 3
-    newBoard[row][col] = 0
-    return "---MUERTE---"
-  elsif aliveNeighbors == 2 or aliveNeighbors == 3
-    newBoard[row][col] = 1
-    return "---SOBREVIVE---"
-  end
-end
-end
-
-# 0 - 4
-(0..board.rows-1).each do |r|
-# 0 - 4
-(0..board.cols-1).each do |c|
-  # (0,1)
-  vivos = explore(board.board, r, c, board.cols)
-  puts "#{r},#{c} tiene valor #{board.board[r][c]} tiene #{vivos} vecinos vivos"
-  updateGrid(board.board, r, c, board_copia.board, vivos)
-end
-end
-board_copia.imprimir_tablero
-
 
 #Reglas del juego:
 # 1.- Cualquier célula viva con menos de dos vecinos vivos muere,
