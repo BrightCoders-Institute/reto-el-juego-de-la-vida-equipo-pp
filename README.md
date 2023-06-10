@@ -5,14 +5,28 @@
 
 > [Ver instrucciones antes de iniciar](./instructions.md)
 
-This README would normally document whatever steps are necessary to get the application up and running.
+## Table of contents
+  - [Description](#Description)
+  - [How to Install and Run the Project](#How-to-Use-the-Project)
+  - [Use Rubocop](#Use-Rubocop)
+  - [Use MinuTest](#Use-MiniTes-(Test))
+  - [Credits](#Credits)
+  
+## Description
+In this solution the game of life is implemented, where you can see the evolution of the generations from the first generation
 
-Things you may want to cover:
+## How to Install and Run the Project
+ruby game_of_life.rb
 
-- Title or Project Name
-- Table of contents
-- Description. A brief description of what the project is about
-- How to Install and Run the Project.
-- How to Use the Project.
-- Credits
-- Badges
+## How to Use the Project.
+
+### Use Rubocop
+rubocop game_of_life.rb
+
+### Use MiniTes (Test)
+//
+
+## Credits
+- [@Imaiez](https://github.com/Imaiez)
+- [@Alonso2105](https://github.com/Alonso2105)
+- [@VaGar91](https://github.com/VaGar91)
